@@ -5,8 +5,6 @@
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-(require 'flymake-cursor)
-
 (when (load "flymake" t)
   (load-library "flymake-cursor")
   (defun flymake-pylint-init ()
