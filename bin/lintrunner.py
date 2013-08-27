@@ -53,7 +53,6 @@ class LintRunner(object):
 
     @classmethod
     def process_output(cls, line):
-        print line
         m = cls.output_matcher.match(line)
         if m:
             fixed_data = dict.fromkeys(('level', 'error_type',
@@ -71,6 +70,7 @@ class LintRunner(object):
         args = [self.command]
         args.extend(self.run_flags)
         args.append(filename)
+
         process = Popen(args, stdout=PIPE, stderr=PIPE, env=self.env)
         for line in process.stdout:
             self.process_output(line)
@@ -126,7 +126,8 @@ class PylintRunner(LintRunner):
         "R0904",  # Too many public methods
         "R0903",  # Too few public methods
         "R0201",  # Method could be a function
-        "W0141",  # Used built in function map
+        "W0141",  # Used built in function map,
+        "F0401",  # Unable import
     ])
 
     @staticmethod
@@ -142,7 +143,7 @@ class PylintRunner(LintRunner):
         return ('--output-format', 'parseable',
                 '--include-ids', 'y',
                 '--reports', 'n',
-                '--disable-msg=' + ','.join(self.operative_ignore_codes))
+                '--disable=' + ','.join(self.operative_ignore_codes))
 
 
 class PycheckerRunner(LintRunner):
@@ -241,7 +242,7 @@ def main():
 
     for runnerclass in (PylintRunner,
                         #PycheckerRunner,
-                        Pep8Runner,
+                        #Pep8Runner,
                         PyflakesRunner,
                         CompilerRunner):
         runner = runnerclass(virtualenv=options.virtualenv,
