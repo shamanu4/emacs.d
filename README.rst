@@ -2,10 +2,7 @@
 Emacs config
 ============
 
-Install pylint, pep8::
+Install required packages::
 
     $ sudo pip install pylint pep8
-
-Install pyflakes::
-
     $ sudo apt-get install pyflakes pycheker
