@@ -248,13 +248,7 @@ def main():
         runner = runnerclass(virtualenv=options.virtualenv,
                              ignore_codes=options.ignore_codes)
 
-        try:
-            runner.run(' '.join(args))
-        except Exception:
-            #print >> sys.stdout, '{0} FAILED'.format(runner)
-            print 'ERROR : {0} failed to run at {1} line 1.'.format(
-                runner.__class__.__name__, args[0])
-
+        runner.run(' '.join(args))
 
 if __name__ == '__main__':
     main()
