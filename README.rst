@@ -2,6 +2,10 @@
 Emacs config
 ============
 
-Simlink scripts from ``./bin/`` to ``~/bin/`` folder. And install PyLinter.
+Install pylint, pep8::
 
-In ``./bin/lintrunner.py`` you can enable different checkers.
+    $ sudo pip install pylint pep8
+
+Install pyflakes::
+
+    $ sudo apt-get install pyflakes pycheker

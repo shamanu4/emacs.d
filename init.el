@@ -1,63 +1,50 @@
 (add-to-list 'load-path "~/.emacs.d")
 
-(when (require 'redo nil 'noerror)
-    (global-set-key (kbd "C-S-z") 'redo))
+(setq default-input-method 'russian-computer)
+(setq frame-title-format `("emacs@" ,(system-name) ": %f"))
 
-(global-set-key (kbd "C-z") 'undo)
+;; тема
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(load-theme 'monokai t)
 
-(if (fboundp 'pc-selection-mode)
-        (pc-selection-mode)
-      (require 'pc-select))
+;; плюшки
+(setq-default indent-tabs-mode nil)      ;; запрещаем выравнивание TAB-ами
+(setq-default tab-width 4)               ;; TAB равен 4 пробелам
+(setq-default line-number-mode t)        ;; показываем номер строки
+(setq-default column-number-mode t)      ;; показываем номер столбца
 
-(autoload 'python-mode "python-mode" "Python Mode." t)
-(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
-(add-to-list 'interpreter-mode-alist '("python" . python-mode))
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(tool-bar-mode -1)                       ;; выключаем тулбар
+(mouse-wheel-mode 1)                     ;; разрешаем колесо мыши
+(hl-line-mode t)                         ;; подсвечиваем текущую строку
+(desktop-save-mode t)                    ;; сохраняем буферы между запусками
+(scroll-bar-mode (quote right))          ;; скроллбар пусть будет справа
 
+(global-set-key "\C-z" 'undo)            ;; отмена по C-z
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)  ;; при сохранении удаляем все висящие пробелы
+
+;;;
+;; поддержка python
+;;;
 (add-hook 'python-mode-hook 'flymake-mode)
 
 (require 'flymake-cursor)
 
 (when (load "flymake" t)
-   (defun flymake-pylint-init ()
-     (list "~/bin/lintrunner.sh"
-           (list buffer-file-name)))
-   (add-to-list 'flymake-allowed-file-name-masks
+    (defun flymake-pylint-init ()
+        (list "~/.emacs.d/bin/lintrunner.sh"
+            (list buffer-file-name)))
+    (add-to-list 'flymake-allowed-file-name-masks
                 '("^[^\*]+\\.py$" flymake-pylint-init)))
 
-(defun py-to-start-of-class()
-  (interactive)
-  (py-beginning-of-def-or-class 'class)
-)
-
-(defun py-to-end-of-class()
-  (interactive)
-  (py-end-of-def-or-class 'class)
-)
-
-(add-hook 'python-mode-hook
-               '(lambda ()
-  (local-set-key [(s menu)] 'rope-code-assist)
-  (local-set-key [(s up)] 'python-move-to-start-of-class)
-  (local-set-key [(s down)] 'python-move-to-end-of-class)
-  (local-set-key [(meta down)] 'py-end-of-def-or-class)
-  (local-set-key [(meta up)] 'py-beginning-of-def-or-class)
-  (local-set-key (kbd "C-c C-a") 'py-to-start-of-class)
-  (local-set-key (kbd "C-c C-e") 'py-to-end-of-class)
-  (local-set-key (kbd "s-q") 'py-shift-region-left)
-  (local-set-key (kbd "s-w") 'py-shift-region-right)
-  )
-)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(inhibit-startup-screen t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;;
+;; при загрузке файла с CRLF преобразовываем его в LF
+;; кому это не нравится смогут переключить буфер по C-x Enter f
+;;
+(defun dos-file-endings-p ()
+     (string-match "dos" (symbol-name buffer-file-coding-system)))
+(defun find-file-check-line-endings ()
+     (when (dos-file-endings-p)
+         (set-buffer-file-coding-system 'undecided-unix)
+         (set-buffer-modified-p nil)))
+(add-hook 'find-file-hook 'find-file-check-line-endings)
