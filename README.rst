@@ -2,6 +2,8 @@
 Emacs config
 ============
 
+Clone this repo. Move to everything to .emacs.d.
+
 Install required packages::
 
     $ sudo pip install pylint pep8
