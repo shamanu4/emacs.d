@@ -1,4 +1,5 @@
 *~
 *.log
+*.elc
 elpa/
 .emacs.desktop

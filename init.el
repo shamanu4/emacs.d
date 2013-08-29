@@ -1,7 +1,12 @@
 (add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/plugins")
 
 (setq default-input-method 'russian-computer)
 (setq frame-title-format `("emacs@" ,(system-name) ": %f"))
+
+;; плагины
+(require 'init-cedet)
+(require 'init-ecb)
 
 ;; тема
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
